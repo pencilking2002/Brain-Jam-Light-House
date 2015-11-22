@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
 	//the threshold, to discard some of the normal value variations  
 	public float threshold = 0.009f;  
 	
+	private float h,v;
+	
 	private Vector3 vel;
 	
 	// Use this for initialization  
@@ -52,6 +54,9 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame  
 	void Update ()   
 	{  
+		h = Input.GetAxis("Horizontal");
+		v = Input.GetAxis("Veritcal");
+		
 		//cast a ray from the current game object position downward, relative to the current game object orientation  
 		ray = new Ray(goTransform.position, -goTransform.up);    
 		
@@ -71,7 +76,7 @@ public class PlayerController : MonoBehaviour
     	goTransform.up = -(Vector3.zero - transform.position).normalized;  
 		
 		//move the game object based on keyboard input  
-		moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, -Input.GetAxis("Vertical"));
+		moveDirection = new Vector3(h, 0, -v);
 		
 		print (moveDirection);
 		
@@ -102,7 +107,8 @@ public class PlayerController : MonoBehaviour
 //		right = new Vector3(right.x, 0, -forward.z);
 		
 		//moveDirection = new Vector3 (moveDirection.x, moveDirection.y, moveDirection.z).normalized;
-		cController.Move(moveDirection * Time.deltaTime);
+		if (h != 0 && v != 0)
+			cController.Move(moveDirection * Time.deltaTime);
 
 
 	}  
