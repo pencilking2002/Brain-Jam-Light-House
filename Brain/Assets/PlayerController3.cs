@@ -24,6 +24,13 @@ public class PlayerController3 : MonoBehaviour
 	private int layerMaskLand = 1 << 9;
 	private float h,v;
 	
+	private Vector3 defaultScale;
+	public Material normalMaterial;
+	private Vector4 _currentColor;
+	private Vector4 _initialColor;
+	private MeshRenderer mRend;
+	
+	
 	[HideInInspector] public bool atSurface = false;					// Is the ball as close as possible to planet surface?
 	[HideInInspector] public bool onWater = false;					// Is the ball as close as possible to planet surface?
 	
@@ -32,9 +39,23 @@ public class PlayerController3 : MonoBehaviour
 	
 	private void Start ()
 	{
+		mRend = GetComponent<MeshRenderer>();
+		
 		cController = GetComponent<CharacterController>(); 
 		cam = Camera.main; 
 		atSurface = false;
+		defaultScale = transform.localScale;
+		
+		normalMaterial = mRend.material;
+		normalMaterial.EnableKeyword("_EMISSION");
+		
+		_initialColor = normalMaterial.color;
+		_currentColor = normalMaterial.GetColor("_Color");
+		
+		
+		//if (GameManager.Instance.player != null && GameManager.Instance.follow != null)
+			//Physics.IgnoreCollision(GameManager.Instance.playerCollider, GameManager.Instance.followCollider);
+		
 	}
 	
 	private void Update ()
@@ -64,14 +85,16 @@ public class PlayerController3 : MonoBehaviour
 //		}
 		
 		//if the ray has hit something
-		if(Physics.Raycast(transform.position, transform.forward, out hit, 2f))//cast the ray 5 units at the specified direction  
+		if(Physics.Raycast(transform.position, transform.forward, out hit, 2f, layerMask))//cast the ray 5 units at the specified direction  
 		{  
 			
 			//if the current goTransform.up.y value has passed the threshold test
 			if(oldNormal.z >= transform.forward.z + threshold || oldNormal.z <= transform.forward.z - threshold)
 			{
 				//smoothly match the player's forward with the inverse of the normal
-				transform.forward = Vector3.Lerp (transform.forward, -hit.normal, 10 * Time.deltaTime);
+				//transform.forward = Vector3.Lerp (transform.forward, -hit.normal, 20 * Time.deltaTime);
+				transform.forward = -hit.normal;
+				
 			}
 			//store the current hit.normal inside the oldNormal
 			oldNormal = -hit.normal;	
@@ -93,21 +116,26 @@ public class PlayerController3 : MonoBehaviour
 		
 	}
 	
-//	private void OnCollisionStay ()
-//	{
-//		atSurface = true;
-//	}
-//	
-////	private void OnCollisionEnter ()
-////	{
-////		//print ("enter");
-////		atSurface = true;
-////	}
-////	
-//	private void OnCollisionExit ()
-//	{
-//		//print ("enter");
-//		atSurface = false;
-//	}
+	public void ScalePlayer (bool full)
+	{
+		if (full)
+		{
+			LeanTween.scale(gameObject, new Vector3(0.5f, 0.5f, 0.5f), 1.0f)
+			
+			.setOnUpdate ((float val) => {
+				normalMaterial.SetColor("_E", Vector4.one);
+				              
+			});
+			
+		}
+		
+		else
+		{
+			LeanTween.scale(gameObject, defaultScale, 1.0f)
+				.setOnUpdate ((float val) => {
+				 	normalMaterial.SetColor("_Color", _initialColor);       
+				 });
+		}
+	}
 
 }  

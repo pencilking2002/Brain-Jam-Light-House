@@ -8,6 +8,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour   
 {  
 	private Camera cam;
+	private SphereCollider sCollider;
 	
 	//this game object's Transform  
 	private Transform goTransform;  
@@ -48,6 +49,9 @@ public class PlayerController : MonoBehaviour
 		cController = GetComponent<CharacterController>();  
 		
 		cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+		
+		//Physics.IgnoreCollision(GameManager.Instance.playerCollider, GameManager.Instance.followCollider);
+		
 		
 	}  
 	
