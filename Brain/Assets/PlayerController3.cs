@@ -64,20 +64,20 @@ public class PlayerController3 : MonoBehaviour
 //		}
 		
 		//if the ray has hit something
-//		if(Physics.Raycast(transform.position, transform.forward, out hit, 2f))//cast the ray 5 units at the specified direction  
-//		{  
-//			
-//			//if the current goTransform.up.y value has passed the threshold test
-//			if(oldNormal.z >= transform.forward.z + threshold || oldNormal.z <= transform.forward.z - threshold)
-//			{
-//				//smoothly match the player's forward with the inverse of the normal
-//				transform.forward = Vector3.Lerp (transform.forward, -hit.normal, 10 * Time.deltaTime);
-//			}
-//			//store the current hit.normal inside the oldNormal
-//			oldNormal = -hit.normal;	
-//		}
+		if(Physics.Raycast(transform.position, transform.forward, out hit, 2f))//cast the ray 5 units at the specified direction  
+		{  
+			
+			//if the current goTransform.up.y value has passed the threshold test
+			if(oldNormal.z >= transform.forward.z + threshold || oldNormal.z <= transform.forward.z - threshold)
+			{
+				//smoothly match the player's forward with the inverse of the normal
+				transform.forward = Vector3.Lerp (transform.forward, -hit.normal, 10 * Time.deltaTime);
+			}
+			//store the current hit.normal inside the oldNormal
+			oldNormal = -hit.normal;	
+		}
 
-		transform.forward = (origin- transform.position).normalized;
+		//transform.forward = (origin- transform.position).normalized;
 		
 		//transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
 					
